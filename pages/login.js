@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import Layout from '../components/Layout';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <Layout>
       <h1>Login</h1>
       <form onSubmit={handleLogin}>
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -21,6 +22,6 @@ export default function Login() {
         <button type="submit">Log In</button>
       </form>
       <p>{message}</p>
-    </div>
+    </Layout>
   );
 }

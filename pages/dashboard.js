@@ -1,38 +1,26 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import Layout from '../components/Layout';
 
 export default function Dashboard() {
   const [tips, setTips] = useState([]);
 
   useEffect(() => {
-    fetchTips();
-    const tipsChannel = supabase
-      .channel('custom-all-channel')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tips' }, () => {
-        fetchTips(); // refresh tips in real-time
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(tipsChannel);
+    const fetchTips = async () => {
+      const { data } = await supabase.from('tips').select('*').order('created_at', { ascending: false });
+      setTips(data || []);
     };
+    fetchTips();
   }, []);
 
-  const fetchTips = async () => {
-    const { data, error } = await supabase.from('tips').select('*').order('created_at', { ascending: false });
-    if (!error) setTips(data);
-  };
-
   return (
-    <div>
-      <h1>Latest Football Tips</h1>
-      {tips.map((tip) => (
-        <div key={tip.id}>
-          <h3>{tip.title}</h3>
-          <p>{tip.match}</p>
-          <small>{new Date(tip.created_at).toLocaleString()}</small>
-        </div>
-      ))}
-    </div>
+    <Layout>
+      <h1>Latest Tips</h1>
+      <ul>
+        {tips.map((tip) => (
+          <li key={tip.id}><strong>{tip.title}</strong> - {tip.match}</li>
+        ))}
+      </ul>
+    </Layout>
   );
 }
