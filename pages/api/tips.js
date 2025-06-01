@@ -1,0 +1,1 @@
+// API to fetch tips (manual entry for MVP)
