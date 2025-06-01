@@ -1,1 +1,3 @@
-// Landing page for SmartBet Pro
+export default function Home() {
+  return <h1>Welcome to SmartBet Pro</h1>;
+}
